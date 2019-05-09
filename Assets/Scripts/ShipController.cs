@@ -14,6 +14,11 @@ public class ShipController {
     public void SetMovementDamping(float value) => _movementDamping = value < 0
         ? throw new ArgumentOutOfRangeException(nameof(value), "Must be greater or equal to zero")
         : _movementDamping = value;
+    
+    public void SetMaximumSpeed(float value) => _maximumSpeed = value < 0
+        ? throw new ArgumentOutOfRangeException(nameof(value), "Must be greater or equal to zero")
+        : _maximumSpeed = value;
+    
 
     private float _rotationSpeed;
     private float _movementSpeed;

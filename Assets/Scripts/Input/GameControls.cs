@@ -40,6 +40,28 @@ public class GameControls : IInputActionCollection
                     ""processors"": """",
                     ""interactions"": """",
                     ""bindings"": []
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""id"": ""2de26e43-4785-4f8d-bb9d-d4d231fdc340"",
+                    ""expectedControlLayout"": """",
+                    ""continuous"": true,
+                    ""passThrough"": false,
+                    ""initialStateCheck"": false,
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""bindings"": []
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""id"": ""e61d22b5-52c1-4d30-9d6b-d714f6e766cf"",
+                    ""expectedControlLayout"": """",
+                    ""continuous"": false,
+                    ""passThrough"": true,
+                    ""initialStateCheck"": true,
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""bindings"": []
                 }
             ],
             ""bindings"": [
@@ -114,6 +136,90 @@ public class GameControls : IInputActionCollection
                     ""isComposite"": false,
                     ""isPartOfComposite"": false,
                     ""modifiers"": """"
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""315b4e1f-5c7b-4fda-bc56-cc9bc125743b"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""1bebef43-55c2-4acb-96e0-9774e3fdc05a"",
+                    ""path"": ""<Keyboard>/numpadPlus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""6741455e-2809-4311-8553-0beb2a8b2e5f"",
+                    ""path"": ""<Keyboard>/numpadMinus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""d9ef3643-5fd5-42dd-8e94-964bd72ceb7a"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""81433226-b6d9-4be6-93ae-5e821fb3f192"",
+                    ""path"": ""<Keyboard>/equals"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""79c45db1-37a8-48e1-ad8b-5a14805d63e1"",
+                    ""path"": ""<Keyboard>/minus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true,
+                    ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d383991f-ca1b-4ac3-8fcd-cb5dd8bc282f"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
                 }
             ]
         }
@@ -142,6 +248,8 @@ public class GameControls : IInputActionCollection
         m_Ship = asset.GetActionMap("Ship");
         m_Ship_Move = m_Ship.GetAction("Move");
         m_Ship_Shoot = m_Ship.GetAction("Shoot");
+        m_Ship_Zoom = m_Ship.GetAction("Zoom");
+        m_Ship_Scroll = m_Ship.GetAction("Scroll");
     }
     ~GameControls()
     {
@@ -186,12 +294,16 @@ public class GameControls : IInputActionCollection
     private IShipActions m_ShipActionsCallbackInterface;
     private InputAction m_Ship_Move;
     private InputAction m_Ship_Shoot;
+    private InputAction m_Ship_Zoom;
+    private InputAction m_Ship_Scroll;
     public struct ShipActions
     {
         private GameControls m_Wrapper;
         public ShipActions(GameControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move { get { return m_Wrapper.m_Ship_Move; } }
         public InputAction @Shoot { get { return m_Wrapper.m_Ship_Shoot; } }
+        public InputAction @Zoom { get { return m_Wrapper.m_Ship_Zoom; } }
+        public InputAction @Scroll { get { return m_Wrapper.m_Ship_Scroll; } }
         public InputActionMap Get() { return m_Wrapper.m_Ship; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -208,6 +320,12 @@ public class GameControls : IInputActionCollection
                 Shoot.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnShoot;
                 Shoot.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnShoot;
                 Shoot.cancelled -= m_Wrapper.m_ShipActionsCallbackInterface.OnShoot;
+                Zoom.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnZoom;
+                Zoom.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnZoom;
+                Zoom.cancelled -= m_Wrapper.m_ShipActionsCallbackInterface.OnZoom;
+                Scroll.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnScroll;
+                Scroll.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnScroll;
+                Scroll.cancelled -= m_Wrapper.m_ShipActionsCallbackInterface.OnScroll;
             }
             m_Wrapper.m_ShipActionsCallbackInterface = instance;
             if (instance != null)
@@ -218,6 +336,12 @@ public class GameControls : IInputActionCollection
                 Shoot.started += instance.OnShoot;
                 Shoot.performed += instance.OnShoot;
                 Shoot.cancelled += instance.OnShoot;
+                Zoom.started += instance.OnZoom;
+                Zoom.performed += instance.OnZoom;
+                Zoom.cancelled += instance.OnZoom;
+                Scroll.started += instance.OnScroll;
+                Scroll.performed += instance.OnScroll;
+                Scroll.cancelled += instance.OnScroll;
             }
         }
     }
@@ -241,5 +365,7 @@ public class GameControls : IInputActionCollection
     {
         void OnMove(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
     }
 }
