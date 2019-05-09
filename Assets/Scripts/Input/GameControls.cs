@@ -57,7 +57,18 @@ public class GameControls : IInputActionCollection
                     ""id"": ""e61d22b5-52c1-4d30-9d6b-d714f6e766cf"",
                     ""expectedControlLayout"": """",
                     ""continuous"": false,
-                    ""passThrough"": true,
+                    ""passThrough"": false,
+                    ""initialStateCheck"": true,
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""bindings"": []
+                },
+                {
+                    ""name"": ""Brake"",
+                    ""id"": ""51c2ec59-a524-423d-a428-9fa28e25020f"",
+                    ""expectedControlLayout"": """",
+                    ""continuous"": true,
+                    ""passThrough"": false,
                     ""initialStateCheck"": true,
                     ""processors"": """",
                     ""interactions"": """",
@@ -220,6 +231,49 @@ public class GameControls : IInputActionCollection
                     ""isComposite"": false,
                     ""isPartOfComposite"": false,
                     ""modifiers"": """"
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""114c0133-0732-4097-ac14-c31c36f3712d"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Brake"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
+                }
+            ]
+        },
+        {
+            ""name"": ""Universal"",
+            ""id"": ""f069fedf-f57a-4b47-b360-fa674b9af49b"",
+            ""actions"": [
+                {
+                    ""name"": ""Help"",
+                    ""id"": ""ba10cda1-ef40-47af-9bc2-40e9d04cb746"",
+                    ""expectedControlLayout"": """",
+                    ""continuous"": false,
+                    ""passThrough"": false,
+                    ""initialStateCheck"": false,
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""bindings"": []
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1e65d0b8-564a-4292-82c3-d565e7bca949"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Help"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false,
+                    ""modifiers"": """"
                 }
             ]
         }
@@ -250,6 +304,10 @@ public class GameControls : IInputActionCollection
         m_Ship_Shoot = m_Ship.GetAction("Shoot");
         m_Ship_Zoom = m_Ship.GetAction("Zoom");
         m_Ship_Scroll = m_Ship.GetAction("Scroll");
+        m_Ship_Brake = m_Ship.GetAction("Brake");
+        // Universal
+        m_Universal = asset.GetActionMap("Universal");
+        m_Universal_Help = m_Universal.GetAction("Help");
     }
     ~GameControls()
     {
@@ -296,6 +354,7 @@ public class GameControls : IInputActionCollection
     private InputAction m_Ship_Shoot;
     private InputAction m_Ship_Zoom;
     private InputAction m_Ship_Scroll;
+    private InputAction m_Ship_Brake;
     public struct ShipActions
     {
         private GameControls m_Wrapper;
@@ -304,6 +363,7 @@ public class GameControls : IInputActionCollection
         public InputAction @Shoot { get { return m_Wrapper.m_Ship_Shoot; } }
         public InputAction @Zoom { get { return m_Wrapper.m_Ship_Zoom; } }
         public InputAction @Scroll { get { return m_Wrapper.m_Ship_Scroll; } }
+        public InputAction @Brake { get { return m_Wrapper.m_Ship_Brake; } }
         public InputActionMap Get() { return m_Wrapper.m_Ship; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -326,6 +386,9 @@ public class GameControls : IInputActionCollection
                 Scroll.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnScroll;
                 Scroll.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnScroll;
                 Scroll.cancelled -= m_Wrapper.m_ShipActionsCallbackInterface.OnScroll;
+                Brake.started -= m_Wrapper.m_ShipActionsCallbackInterface.OnBrake;
+                Brake.performed -= m_Wrapper.m_ShipActionsCallbackInterface.OnBrake;
+                Brake.cancelled -= m_Wrapper.m_ShipActionsCallbackInterface.OnBrake;
             }
             m_Wrapper.m_ShipActionsCallbackInterface = instance;
             if (instance != null)
@@ -342,6 +405,9 @@ public class GameControls : IInputActionCollection
                 Scroll.started += instance.OnScroll;
                 Scroll.performed += instance.OnScroll;
                 Scroll.cancelled += instance.OnScroll;
+                Brake.started += instance.OnBrake;
+                Brake.performed += instance.OnBrake;
+                Brake.cancelled += instance.OnBrake;
             }
         }
     }
@@ -350,6 +416,45 @@ public class GameControls : IInputActionCollection
         get
         {
             return new ShipActions(this);
+        }
+    }
+    // Universal
+    private InputActionMap m_Universal;
+    private IUniversalActions m_UniversalActionsCallbackInterface;
+    private InputAction m_Universal_Help;
+    public struct UniversalActions
+    {
+        private GameControls m_Wrapper;
+        public UniversalActions(GameControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Help { get { return m_Wrapper.m_Universal_Help; } }
+        public InputActionMap Get() { return m_Wrapper.m_Universal; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled { get { return Get().enabled; } }
+        public InputActionMap Clone() { return Get().Clone(); }
+        public static implicit operator InputActionMap(UniversalActions set) { return set.Get(); }
+        public void SetCallbacks(IUniversalActions instance)
+        {
+            if (m_Wrapper.m_UniversalActionsCallbackInterface != null)
+            {
+                Help.started -= m_Wrapper.m_UniversalActionsCallbackInterface.OnHelp;
+                Help.performed -= m_Wrapper.m_UniversalActionsCallbackInterface.OnHelp;
+                Help.cancelled -= m_Wrapper.m_UniversalActionsCallbackInterface.OnHelp;
+            }
+            m_Wrapper.m_UniversalActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                Help.started += instance.OnHelp;
+                Help.performed += instance.OnHelp;
+                Help.cancelled += instance.OnHelp;
+            }
+        }
+    }
+    public UniversalActions @Universal
+    {
+        get
+        {
+            return new UniversalActions(this);
         }
     }
     private int m_KeyboardSchemeIndex = -1;
@@ -367,5 +472,10 @@ public class GameControls : IInputActionCollection
         void OnShoot(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
+        void OnBrake(InputAction.CallbackContext context);
+    }
+    public interface IUniversalActions
+    {
+        void OnHelp(InputAction.CallbackContext context);
     }
 }

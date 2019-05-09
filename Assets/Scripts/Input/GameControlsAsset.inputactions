@@ -43,7 +43,18 @@
                     "id": "e61d22b5-52c1-4d30-9d6b-d714f6e766cf",
                     "expectedControlLayout": "",
                     "continuous": false,
-                    "passThrough": true,
+                    "passThrough": false,
+                    "initialStateCheck": true,
+                    "processors": "",
+                    "interactions": "",
+                    "bindings": []
+                },
+                {
+                    "name": "Brake",
+                    "id": "51c2ec59-a524-423d-a428-9fa28e25020f",
+                    "expectedControlLayout": "",
+                    "continuous": true,
+                    "passThrough": false,
                     "initialStateCheck": true,
                     "processors": "",
                     "interactions": "",
@@ -203,6 +214,49 @@
                     "processors": "",
                     "groups": "",
                     "action": "Scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "modifiers": ""
+                },
+                {
+                    "name": "",
+                    "id": "114c0133-0732-4097-ac14-c31c36f3712d",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Brake",
+                    "isComposite": false,
+                    "isPartOfComposite": false,
+                    "modifiers": ""
+                }
+            ]
+        },
+        {
+            "name": "Universal",
+            "id": "f069fedf-f57a-4b47-b360-fa674b9af49b",
+            "actions": [
+                {
+                    "name": "Help",
+                    "id": "ba10cda1-ef40-47af-9bc2-40e9d04cb746",
+                    "expectedControlLayout": "",
+                    "continuous": false,
+                    "passThrough": false,
+                    "initialStateCheck": false,
+                    "processors": "",
+                    "interactions": "",
+                    "bindings": []
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1e65d0b8-564a-4292-82c3-d565e7bca949",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Help",
                     "isComposite": false,
                     "isPartOfComposite": false,
                     "modifiers": ""

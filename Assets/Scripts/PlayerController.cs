@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Experimental.Input;
 
@@ -5,31 +6,41 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
 
     [Range(0, 360)] [Tooltip("Angles per second")] [SerializeField]
     private float rotationSpeed;
-    [Range(0, 10)] [SerializeField]
-    private float acceleration;
-    [Range(0, 1)] [SerializeField]
-    private float motionDamping;
-    
-    [Range(0, 50)] [SerializeField]
-    private float maximumSpeed;
+
+    [Range(0, 10)] [SerializeField] private float acceleration;
+    [Range(0, 1)] [SerializeField] private float motionDamping;
+    [Range(0, 50)] [SerializeField] private float maximumSpeed;
+    [Range(0, 1000)] [SerializeField] private float inertiaMultiplier;
 
     private Transform _t;
     private ShipController _shipController;
     private GameControls _controls;
-    private Vector3 _direction;
-    
+
+    //TODO sliders for test
+    /*private void OnGUI() {
+        var acc = GUI.HorizontalSlider(new Rect(10, 10, 100, 50), acceleration, 0, 10);
+        if (Math.Abs(acc - acceleration) > float.Epsilon) {
+            acceleration = acc;
+            _shipController.SetMovementSpeed(acc);
+        }
+    }*/
+
+
     private void Awake() {
         _t = transform;
         _controls = new GameControls();
         _controls.Ship.SetCallbacks(this);
-        _shipController = new ShipController(rotationSpeed, acceleration, motionDamping, _t, maximumSpeed);
+        _shipController = new ShipController(rotationSpeed, 
+            acceleration, 
+            motionDamping, 
+            _t,
+            maximumSpeed);
     }
 
     void Update() {
         _shipController.RotateAt(GameInput.MousePosition);
-        _shipController.MoveToDirection(_direction);
-        _direction = Vector3.zero;
-        
+        _shipController.MoveToDirection();
+
         foreach (var lineRenderer in GetComponentsInChildren<LineRenderer>()) {
             var position = lineRenderer.transform.position;
             var z = position.z;
@@ -37,10 +48,9 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
             mousePosition.z = z;
             lineRenderer.SetPositions(new[] {
                 position,
-                position + (mousePosition-position).normalized
+                position + (mousePosition - position).normalized
             });
         }
-        
 
         LegacyScroll();
     }
@@ -51,12 +61,12 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     private static void LegacyScroll() {
         var scroll = Input.GetAxis("Mouse ScrollWheel");
 
-        if (Mathf.Abs(scroll) > float.Epsilon) 
+        if (Mathf.Abs(scroll) > float.Epsilon)
             CameraController.Instance.Scroll(Vector2.up * scroll);
     }
 
     public void OnMove(InputAction.CallbackContext context) {
-        _direction = context.ReadValue<Vector2>();
+        _shipController.SetDirection(context.ReadValue<Vector2>());
     }
 
     public void OnShoot(InputAction.CallbackContext context) {
@@ -73,13 +83,16 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         //Debug.Log($"Scroll: {context.ReadValue<Vector2>()}"); BUG scroll input is broken
     }
 
-    public void OnEnable()
-    {
+    public void OnBrake(InputAction.CallbackContext context) {
+        _shipController.SetDirection(Vector3.zero);
+        _shipController.SetInertiaMultiplier(inertiaMultiplier);
+    }
+
+    public void OnEnable() {
         _controls.Enable();
     }
 
-    public void OnDisable()
-    {
+    public void OnDisable() {
         _controls.Disable();
     }
 }
