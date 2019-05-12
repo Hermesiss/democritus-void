@@ -1,8 +1,16 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Experimental.Input;
 
+
+public class Vector2Event : UnityEvent<Vector2> {
+    
+}
+
 public class PlayerController : MonoBehaviour, GameControls.IShipActions {
+
+    public static Vector2Event OnPositionChange = new Vector2Event();
 
     [Range(0, 360)] [Tooltip("Angles per second")] [SerializeField]
     private float rotationSpeed;
@@ -53,6 +61,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         }
 
         LegacyScroll();
+        OnPositionChange.Invoke(transform.position);
     }
 
     /// <summary>
