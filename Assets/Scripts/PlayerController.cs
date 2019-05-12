@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Experimental.Input;
@@ -24,6 +23,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     private ShipController _shipController;
     private GameControls _controls;
     private bool _isBrake;
+    private LineRenderer[] _lineRenderers;
 
     //TODO sliders for test
     /*private void OnGUI() {
@@ -44,13 +44,22 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
             motionDamping, 
             _t,
             maximumSpeed);
+        _lineRenderers = GetComponentsInChildren<LineRenderer>();
     }
 
-    void Update() {
+    private void Update() {
+        if (Time.timeScale < 0.1f) return;
         _shipController.RotateAt(GameInput.MousePosition);
         _shipController.MoveToDirection();
 
-        foreach (var lineRenderer in GetComponentsInChildren<LineRenderer>()) {
+        DrawLines();
+
+        LegacyScroll();
+        OnPositionChange.Invoke(transform.position);
+    }
+
+    private void DrawLines() {
+        foreach (var lineRenderer in _lineRenderers) {
             var position = lineRenderer.transform.position;
             var z = position.z;
             var mousePosition = GameInput.MousePosition;
@@ -60,9 +69,6 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
                 position + (mousePosition - position).normalized
             });
         }
-
-        LegacyScroll();
-        OnPositionChange.Invoke(transform.position);
     }
 
     private void LateUpdate() {

@@ -251,7 +251,7 @@ public class GameControls : IInputActionCollection
             ""id"": ""f069fedf-f57a-4b47-b360-fa674b9af49b"",
             ""actions"": [
                 {
-                    ""name"": ""Help"",
+                    ""name"": ""Menu"",
                     ""id"": ""ba10cda1-ef40-47af-9bc2-40e9d04cb746"",
                     ""expectedControlLayout"": """",
                     ""continuous"": false,
@@ -266,11 +266,11 @@ public class GameControls : IInputActionCollection
                 {
                     ""name"": """",
                     ""id"": ""1e65d0b8-564a-4292-82c3-d565e7bca949"",
-                    ""path"": ""<Keyboard>/f1"",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Help"",
+                    ""action"": ""Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false,
                     ""modifiers"": """"
@@ -307,7 +307,7 @@ public class GameControls : IInputActionCollection
         m_Ship_Brake = m_Ship.GetAction("Brake");
         // Universal
         m_Universal = asset.GetActionMap("Universal");
-        m_Universal_Help = m_Universal.GetAction("Help");
+        m_Universal_Menu = m_Universal.GetAction("Menu");
     }
     ~GameControls()
     {
@@ -421,12 +421,12 @@ public class GameControls : IInputActionCollection
     // Universal
     private InputActionMap m_Universal;
     private IUniversalActions m_UniversalActionsCallbackInterface;
-    private InputAction m_Universal_Help;
+    private InputAction m_Universal_Menu;
     public struct UniversalActions
     {
         private GameControls m_Wrapper;
         public UniversalActions(GameControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Help { get { return m_Wrapper.m_Universal_Help; } }
+        public InputAction @Menu { get { return m_Wrapper.m_Universal_Menu; } }
         public InputActionMap Get() { return m_Wrapper.m_Universal; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -437,16 +437,16 @@ public class GameControls : IInputActionCollection
         {
             if (m_Wrapper.m_UniversalActionsCallbackInterface != null)
             {
-                Help.started -= m_Wrapper.m_UniversalActionsCallbackInterface.OnHelp;
-                Help.performed -= m_Wrapper.m_UniversalActionsCallbackInterface.OnHelp;
-                Help.cancelled -= m_Wrapper.m_UniversalActionsCallbackInterface.OnHelp;
+                Menu.started -= m_Wrapper.m_UniversalActionsCallbackInterface.OnMenu;
+                Menu.performed -= m_Wrapper.m_UniversalActionsCallbackInterface.OnMenu;
+                Menu.cancelled -= m_Wrapper.m_UniversalActionsCallbackInterface.OnMenu;
             }
             m_Wrapper.m_UniversalActionsCallbackInterface = instance;
             if (instance != null)
             {
-                Help.started += instance.OnHelp;
-                Help.performed += instance.OnHelp;
-                Help.cancelled += instance.OnHelp;
+                Menu.started += instance.OnMenu;
+                Menu.performed += instance.OnMenu;
+                Menu.cancelled += instance.OnMenu;
             }
         }
     }
@@ -476,6 +476,6 @@ public class GameControls : IInputActionCollection
     }
     public interface IUniversalActions
     {
-        void OnHelp(InputAction.CallbackContext context);
+        void OnMenu(InputAction.CallbackContext context);
     }
 }

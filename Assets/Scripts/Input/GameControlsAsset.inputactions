@@ -237,7 +237,7 @@
             "id": "f069fedf-f57a-4b47-b360-fa674b9af49b",
             "actions": [
                 {
-                    "name": "Help",
+                    "name": "Menu",
                     "id": "ba10cda1-ef40-47af-9bc2-40e9d04cb746",
                     "expectedControlLayout": "",
                     "continuous": false,
@@ -252,11 +252,11 @@
                 {
                     "name": "",
                     "id": "1e65d0b8-564a-4292-82c3-d565e7bca949",
-                    "path": "<Keyboard>/f1",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Help",
+                    "action": "Menu",
                     "isComposite": false,
                     "isPartOfComposite": false,
                     "modifiers": ""
