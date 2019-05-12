@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     private Transform _t;
     private ShipController _shipController;
     private GameControls _controls;
+    private bool _isBrake;
 
     //TODO sliders for test
     /*private void OnGUI() {
@@ -64,6 +65,10 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         OnPositionChange.Invoke(transform.position);
     }
 
+    private void LateUpdate() {
+        _isBrake = false;
+    }
+
     /// <summary>
     /// TODO remove when Unity's UnityEngine.Experimental.Input.InputSystem.GetDevice<Mouse>().scroll is fixed
     /// </summary>
@@ -75,6 +80,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     }
 
     public void OnMove(InputAction.CallbackContext context) {
+        if (_isBrake) return;
         _shipController.SetDirection(context.ReadValue<Vector2>());
     }
 
@@ -93,6 +99,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     }
 
     public void OnBrake(InputAction.CallbackContext context) {
+        _isBrake = true;
         _shipController.SetDirection(Vector3.zero);
         _shipController.SetInertiaMultiplier(inertiaMultiplier);
     }
