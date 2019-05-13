@@ -20,6 +20,10 @@ public class UIController : MonoBehaviour, GameControls.IUniversalActions {
         
         continueBtn.onClick.AddListener(() => SetPause(false));
         exitBtn.onClick.AddListener(Application.Quit);
+        
+    }
+
+    void Start() {
         SetSlider(rotation, PlayerController.Param.RotationSpeed, 360);
         SetSlider(acceleration, PlayerController.Param.Aceleration, 10);
         SetSlider(motionDamping, PlayerController.Param.MotionDamping, 1);
@@ -29,7 +33,7 @@ public class UIController : MonoBehaviour, GameControls.IUniversalActions {
 
     private void SetSlider(Slider slider, PlayerController.Param param, float maxValue) {
         slider.maxValue = maxValue;
-        slider.GetComponentInChildren<TextMeshPro>().text = param.ToString();
+        slider.GetComponentInChildren<TextMeshProUGUI>().text = param.ToString();
         slider.value = PlayerController.Instance.GetParam(param);
         slider.onValueChanged.AddListener(value => {
             PlayerController.Instance.SetParam(param, value);
