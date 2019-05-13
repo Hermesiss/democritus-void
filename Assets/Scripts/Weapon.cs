@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(AudioSource))]
 public class Weapon : MonoBehaviour {
     [Range(0, 360)] [SerializeField] private float angle;
     [Range(0, 10)] [SerializeField] private float range;
@@ -16,6 +16,7 @@ public class Weapon : MonoBehaviour {
     private Image _arc;
     private Transform _rectTransform;
     private Vector3 _currentDirection;
+    private AudioSource _audio;
 
     private readonly Stopwatch _stopwatch = new Stopwatch();
 
@@ -25,6 +26,7 @@ public class Weapon : MonoBehaviour {
         var proj = bullet.GetComponent<Projectile>();
         proj.Launch(range, _currentDirection * projectileSpeed);
         _stopwatch.Restart();
+        _audio.PlayOneShot(proj.FireSound);
     }
 
     private void Awake() {
@@ -33,6 +35,7 @@ public class Weapon : MonoBehaviour {
         _arc = GetComponentInChildren<Image>();
         _arc.fillAmount = angle / 360;
         _arc.transform.Rotate(transform.forward, angle / 2);
+        _audio = GetComponent<AudioSource>();
     }
 
     private void Update() {

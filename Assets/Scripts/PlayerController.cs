@@ -87,10 +87,8 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     }
 
     public void OnShoot(InputAction.CallbackContext context) {
-        Debug.Log("shoot");
         if (_weapons == null || _weapons.Length <= 0) return;
         foreach (var weapon in _weapons) {
-            Debug.Log("fire");
             weapon.Fire();
         }
     }

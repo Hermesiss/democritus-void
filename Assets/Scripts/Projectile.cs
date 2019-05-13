@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour {
+    [SerializeField] private AudioClip fireSound;
+    public AudioClip FireSound => fireSound;
+    
     public void Launch(float range, Vector3 velocity) {
         transform.Rotate(Vector3.forward, Vector3.SignedAngle(Vector3.up, velocity, Vector3.forward));
         StartCoroutine(LaunchEnumerator(range, velocity));
