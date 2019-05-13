@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Experimental.Input;
@@ -9,6 +10,16 @@ public class Vector2Event : UnityEvent<Vector2> {
 
 public class PlayerController : MonoBehaviour, GameControls.IShipActions {
 
+    public enum Param {
+        RotationSpeed,
+        Aceleration,
+        MotionDamping,
+        MaximumSpeed,
+        BrakingForce
+    }
+
+    public static PlayerController Instance { get; private set; }
+        
     public static Vector2Event OnPositionChange = new Vector2Event();
 
     [Range(0, 360)] [Tooltip("Angles per second")] [SerializeField]
@@ -35,6 +46,54 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         }
     }*/
 
+    private void SetShipParams() {
+        _shipController.SetMaximumSpeed(maximumSpeed);
+        _shipController.SetMovementSpeed(acceleration);
+        _shipController.SetRotationSpeed(rotationSpeed);
+        _shipController.SetInertiaMultiplier(inertiaMultiplier);
+        _shipController.SetMovementDamping(motionDamping);
+        
+    }
+	//TODO set this params to ship controller
+    public void SetParam(Param param, float value) {
+        switch (param) {
+            case Param.RotationSpeed:
+                rotationSpeed = value;
+                break;
+            case Param.Aceleration:
+                acceleration = value;
+                break;
+            case Param.MotionDamping:
+                motionDamping = value;
+                break;
+            case Param.MaximumSpeed:
+                maximumSpeed = value;
+                break;
+            case Param.BrakingForce:
+                inertiaMultiplier = value;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(param), param, null);
+        }
+        SetShipParams();
+    }
+
+    public float GetParam(Param param) {
+        switch (param) {
+            case Param.RotationSpeed:
+                return rotationSpeed;
+            case Param.Aceleration:
+                return acceleration;
+            case Param.MotionDamping:
+                return motionDamping;
+            case Param.MaximumSpeed:
+                return maximumSpeed;
+            case Param.BrakingForce:
+                return inertiaMultiplier;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(param), param, null);
+        }
+    }
 
     private void Awake() {
         _t = transform;
@@ -45,7 +104,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
             motionDamping,
             _t,
             maximumSpeed);
-        
+        Instance = this;
     }
 
     private void Start() {
