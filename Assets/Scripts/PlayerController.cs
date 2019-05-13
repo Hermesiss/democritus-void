@@ -23,7 +23,8 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     private ShipController _shipController;
     private GameControls _controls;
     private bool _isBrake;
-    private LineRenderer[] _lineRenderers;
+    private Weapon[] _weapons;
+    
 
     //TODO sliders for test
     /*private void OnGUI() {
@@ -39,36 +40,31 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         _t = transform;
         _controls = new GameControls();
         _controls.Ship.SetCallbacks(this);
-        _shipController = new ShipController(rotationSpeed, 
-            acceleration, 
-            motionDamping, 
+        _shipController = new ShipController(rotationSpeed,
+            acceleration,
+            motionDamping,
             _t,
             maximumSpeed);
-        _lineRenderers = GetComponentsInChildren<LineRenderer>();
+        
+    }
+
+    private void Start() {
+        _weapons = GetComponentsInChildren<Weapon>();
     }
 
     private void Update() {
-        if (Time.timeScale < 0.1f) return;
+        if (Time.timeScale < 0.1f) {
+            _controls.Ship.Disable();
+            return;
+        }
+
+        _controls.Ship.Enable();
+
         _shipController.RotateAt(GameInput.MousePosition);
         _shipController.MoveToDirection();
 
-        DrawLines();
-
         LegacyScroll();
         OnPositionChange.Invoke(transform.position);
-    }
-
-    private void DrawLines() {
-        foreach (var lineRenderer in _lineRenderers) {
-            var position = lineRenderer.transform.position;
-            var z = position.z;
-            var mousePosition = GameInput.MousePosition;
-            mousePosition.z = z;
-            lineRenderer.SetPositions(new[] {
-                position,
-                position + (mousePosition - position).normalized
-            });
-        }
     }
 
     private void LateUpdate() {
@@ -91,7 +87,12 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     }
 
     public void OnShoot(InputAction.CallbackContext context) {
-        Debug.Log("Shoot");
+        Debug.Log("shoot");
+        if (_weapons == null || _weapons.Length <= 0) return;
+        foreach (var weapon in _weapons) {
+            Debug.Log("fire");
+            weapon.Fire();
+        }
     }
 
     public void OnZoom(InputAction.CallbackContext context) {
@@ -111,10 +112,10 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     }
 
     public void OnEnable() {
-        _controls.Enable();
+        _controls.Ship.Enable();
     }
 
     public void OnDisable() {
-        _controls.Disable();
+        _controls.Ship.Disable();
     }
 }

@@ -34,10 +34,7 @@ public class UIController : MonoBehaviour, GameControls.IUniversalActions {
     private void SetPause(bool mode) {
         _menuOpened = mode;
         
-        if (mode)
-            _controls.Ship.Disable();
-        else
-            _controls.Ship.Enable();
+        
 
         pausePanel.gameObject.SetActive(mode);
         Time.timeScale = mode ? 0 : 1;
