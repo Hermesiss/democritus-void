@@ -45,6 +45,15 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
             _shipController.SetMovementSpeed(acc);
         }
     }*/
+
+    private void SetShipParams() {
+        _shipController.SetMaximumSpeed(maximumSpeed);
+        _shipController.SetMovementSpeed(acceleration);
+        _shipController.SetRotationSpeed(rotationSpeed);
+        _shipController.SetInertiaMultiplier(inertiaMultiplier);
+        _shipController.SetMovementDamping(motionDamping);
+        
+    }
 	//TODO set this params to ship controller
     public void SetParam(Param param, float value) {
         switch (param) {
@@ -66,6 +75,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
             default:
                 throw new ArgumentOutOfRangeException(nameof(param), param, null);
         }
+        SetShipParams();
     }
 
     public float GetParam(Param param) {
