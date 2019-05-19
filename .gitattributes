@@ -1,0 +1,7 @@
+# Linguist
+Assets/TextMesh Pro/** linguist-vendored
+Assets/TextMesh Pro/** linguist-detectable=false
+
+Assets/Scripts/Input/GameControls.cs linguist-generated=true
+Assets/Scripts/Input/GameControlsAsset.inputactions linguist-generated=true
+ProjectSettings/* linguist-generated=true
