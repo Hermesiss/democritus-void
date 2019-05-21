@@ -23,27 +23,6 @@ public class UIController : MonoBehaviour, GameControls.IUniversalActions {
         
     }
 
-    void Start() {
-        //SetSliders();
-    }
-
-    /*private void SetSliders() {
-        SetSlider(rotation, PlayerController.Param.RotationSpeed, 360);
-        SetSlider(acceleration, PlayerController.Param.Acceleration, 10);
-        SetSlider(motionDamping, PlayerController.Param.MotionDamping, 1);
-        SetSlider(maximumSpeed, PlayerController.Param.MaximumSpeed, 20);
-        SetSlider(inertiaMult, PlayerController.Param.BrakingForce, 300);
-    }*/
-
-    /*private void SetSlider(Slider slider, PlayerController.Param param, float maxValue) {
-        slider.maxValue = maxValue;
-        slider.GetComponentInChildren<TextMeshProUGUI>().text = param.ToString();
-        slider.value = PlayerController.Instance.GetParam(param);
-        slider.onValueChanged.AddListener(value => {
-            PlayerController.Instance.SetParam(param, value);
-        });
-    }*/
-
     public void OnMenu(InputAction.CallbackContext context) {
         SetPause(!_menuOpened);
     }

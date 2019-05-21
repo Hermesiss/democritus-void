@@ -4919,6 +4919,11 @@ PrefabInstance:
       propertyPath: firerate
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4846117282143109288, guid: c071eb07cda0ba64a8797520ca2c1e30,
+        type: 3}
+      propertyPath: fireRate
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5243164804792199815, guid: c071eb07cda0ba64a8797520ca2c1e30,
         type: 3}
       propertyPath: angle
@@ -4943,6 +4948,11 @@ PrefabInstance:
     - target: {fileID: 5243164804792199815, guid: c071eb07cda0ba64a8797520ca2c1e30,
         type: 3}
       propertyPath: firerate
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5243164804792199815, guid: c071eb07cda0ba64a8797520ca2c1e30,
+        type: 3}
+      propertyPath: fireRate
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5504954629223629742, guid: c071eb07cda0ba64a8797520ca2c1e30,

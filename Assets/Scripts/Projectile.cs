@@ -11,8 +11,14 @@ public class Projectile : MonoBehaviour {
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void Launch(float lifetime, Vector3 velocity) {
-        transform.Rotate(Vector3.forward, Vector3.SignedAngle(Vector3.up, velocity, Vector3.forward));
+    /// <summary>
+    /// Launch a projectile
+    /// </summary>
+    /// <param name="lifetime">Seconds before destroying</param>
+    /// <param name="velocity">Direction and speed of projectile, absolute</param>
+    /// <param name="direction">Direction for sprite, can differ from velocity due to inertia</param>
+    public void Launch(float lifetime, Vector3 velocity, Vector3 direction) {
+        transform.Rotate(Vector3.forward, Vector3.SignedAngle(Vector3.up, direction, Vector3.forward));
         StartCoroutine(LaunchEnumerator(lifetime, velocity));
     }
 
