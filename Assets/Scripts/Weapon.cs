@@ -20,11 +20,11 @@ public class Weapon : MonoBehaviour {
 
     private readonly Stopwatch _stopwatch = new Stopwatch();
 
-    public void Fire() {
+    public void Fire(Vector2 velocity) {
         if (_stopwatch.ElapsedMilliseconds < 1000 / firerate) return;
         var bullet = Instantiate(projectilePrefab.gameObject, transform.position, Quaternion.identity);
         var proj = bullet.GetComponent<Projectile>();
-        proj.Launch(range, _currentDirection * projectileSpeed);
+        proj.Launch(range / projectileSpeed, _currentDirection * projectileSpeed + (Vector3) velocity);
         _stopwatch.Restart();
         _audio.PlayOneShot(proj.FireSound);
     }

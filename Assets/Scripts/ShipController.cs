@@ -3,48 +3,34 @@ using UnityEngine;
 
 public class ShipController {
 
-    public void SetRotationSpeed(float value) => _rotationSpeed = value < 0
-        ? throw new ArgumentOutOfRangeException(nameof(value), "Must be greater or equal to zero")
-        : _rotationSpeed = value;
 
-    public void SetMovementSpeed(float value) => _movementSpeed = value < 0
-        ? throw new ArgumentOutOfRangeException(nameof(value), "Must be greater or equal to zero")
-        : _movementSpeed = value;
+    public float RotationSpeed { get; private set; }
+    public float MovementSpeed { get; private set; }
+    public float MovementDamping { get; private set; }
+    public float MaximumSpeed { get; private set; }
+    public float BrakingForce { get; private set; }
 
-    public void SetMovementDamping(float value) => _movementDamping = value < 0
-        ? throw new ArgumentOutOfRangeException(nameof(value), "Must be greater or equal to zero")
-        : _movementDamping = value;
+    public bool IsBraking;
+    public Vector3 Direction;
+    public Vector2 Velocity { get; private set; }
 
-    public void SetMaximumSpeed(float value) => _maximumSpeed = value < 0
-        ? throw new ArgumentOutOfRangeException(nameof(value), "Must be greater or equal to zero")
-        : _maximumSpeed = value;
-
-    public void SetDirection(Vector3 direction) => _direction = direction;
-    public void SetInertiaMultiplier(float multiplier) => _inertiaMultiplier = multiplier;
-
-    private float _rotationSpeed;
-    private float _movementSpeed;
-    private float _movementDamping;
-    private float _maximumSpeed;
     private Transform _t;
 
-    private Vector2 _velocity;
 
-    private Vector3 _direction;
-    private float _inertiaMultiplier;
-
-    private float SmoothingAngle => _rotationSpeed / 8;
+    private float SmoothingAngle => RotationSpeed / 8;
 
     public ShipController(float rotationSpeed,
         float movementSpeed,
         float movementDamping,
         Transform t,
-        float maximumSpeed) {
-        _rotationSpeed = rotationSpeed;
-        _movementSpeed = movementSpeed;
-        _movementDamping = movementDamping;
+        float maximumSpeed,
+        float brakingForce) {
+        RotationSpeed = rotationSpeed;
+        MovementSpeed = movementSpeed;
+        MovementDamping = movementDamping;
         _t = t;
-        _maximumSpeed = maximumSpeed;
+        MaximumSpeed = maximumSpeed;
+        BrakingForce = brakingForce;
     }
 
     public void RotateAt(Vector3 target) {
@@ -54,29 +40,31 @@ public class ShipController {
 
         angle = Mathf.Abs(angle) > SmoothingAngle ? Mathf.Sign(angle) : angle / SmoothingAngle;
 
-        _t.Rotate(_t.forward, angle * Time.deltaTime * _rotationSpeed);
+        _t.Rotate(_t.forward, angle * Time.deltaTime * RotationSpeed);
         Debug.DrawRay(_t.position, _t.forward);
     }
 
     public void MoveToDirection() {
         float momentum;
-        if (_direction.sqrMagnitude > float.Epsilon) {
-            momentum = _movementSpeed * (1 - _movementDamping) * _inertiaMultiplier;
+        if (Direction.sqrMagnitude > float.Epsilon) {
+            momentum = MovementSpeed * (1 - MovementDamping) * 1;
         }
         else {
-            _direction = -_velocity;
-            momentum = Mathf.Clamp(_movementSpeed * _movementDamping * _inertiaMultiplier, 0, _movementDamping*_velocity.magnitude/Time.deltaTime);
+            var inertia = IsBraking ? BrakingForce : 1;
+            Direction = -Velocity;
+            momentum = Mathf.Clamp(MovementSpeed * MovementDamping * inertia, 0,
+                MovementDamping * Velocity.magnitude / Time.deltaTime);
         }
 
-        _velocity += (Vector2) _direction.normalized * momentum * Time.deltaTime;
+        Velocity += (Vector2) Direction.normalized * momentum * Time.deltaTime;
 
-        if (_velocity.sqrMagnitude > _maximumSpeed * _maximumSpeed) {
-            _velocity = _velocity.normalized * _maximumSpeed;
+        if (Velocity.sqrMagnitude > MaximumSpeed * MaximumSpeed) {
+            Velocity = Velocity.normalized * MaximumSpeed;
         }
 
-        _t.Translate(_velocity * Time.deltaTime, Space.World);
+        _t.Translate(Velocity * Time.deltaTime, Space.World);
 
-        _direction = Vector3.zero;
-        _inertiaMultiplier = 1;
+        Direction = Vector3.zero;
+        IsBraking = false;
     }
 }
