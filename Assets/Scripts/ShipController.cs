@@ -1,21 +1,19 @@
 ﻿using System;
 using UnityEngine;
 
+[Serializable]
 public class ShipController {
-
-
     public float RotationSpeed { get; private set; }
     public float MovementSpeed { get; private set; }
     public float MovementDamping { get; private set; }
     public float MaximumSpeed { get; private set; }
     public float BrakingForce { get; private set; }
-
+    [Header("asd")]
     public bool IsBraking;
     public Vector3 Direction;
     public Vector2 Velocity { get; private set; }
 
     private Transform _t;
-
 
     private float SmoothingAngle => RotationSpeed / 8;
 

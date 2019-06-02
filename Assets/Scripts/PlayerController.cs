@@ -11,7 +11,7 @@ public class Vector2Event : UnityEvent<Vector2> {
 public class PlayerController : MonoBehaviour, GameControls.IShipActions {
 
     public static PlayerController Instance { get; private set; }
-        
+
     public static readonly Vector2Event OnPositionChange = new Vector2Event();
 
     [Range(0, 360)] [Tooltip("Angles per second")] [SerializeField]
@@ -23,11 +23,12 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     [Range(0, 1000)] [SerializeField] private float inertiaMultiplier;
 
     private Transform _t;
-    private ShipController _shipController;
+    [SerializeField] private ShipController _shipController;
     private GameControls _controls;
-    
+
     private Weapon[] _weapons;
-    
+    private static IScrollable _scrollable;
+
 
     private void Awake() {
         _t = transform;
@@ -37,17 +38,17 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
             acceleration,
             motionDamping,
             _t,
-            maximumSpeed, 
+            maximumSpeed,
             inertiaMultiplier);
         Instance = this;
     }
 
     private void Start() {
+        _scrollable = CameraController.Instance;
         _weapons = GetComponentsInChildren<Weapon>();
     }
 
     private void Update() {
-        //_shipController.IsBraking = true;
         if (Time.timeScale < 0.1f) {
             _controls.Ship.Disable();
             return;
@@ -62,10 +63,6 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         OnPositionChange.Invoke(transform.position);
     }
 
-    private void LateUpdate() {
-        
-    }
-
     /// <summary>
     /// TODO remove when Unity's UnityEngine.Experimental.Input.InputSystem.GetDevice<Mouse>().scroll is fixed
     /// </summary>
@@ -73,12 +70,10 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         var scroll = Input.GetAxis("Mouse ScrollWheel");
 
         if (Mathf.Abs(scroll) > float.Epsilon)
-            CameraController.Instance.Scroll(Vector2.up * scroll);
+            _scrollable.Scroll(Vector2.up * scroll);
     }
 
     public void OnMove(InputAction.CallbackContext context) {
-        //if (_isBrake) return;
-        
         _shipController.Direction = context.ReadValue<Vector2>();
     }
 
@@ -92,7 +87,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     public void OnZoom(InputAction.CallbackContext context) {
         var scroll = context.ReadValue<float>();
         Debug.Log($"Zoom: {scroll}");
-        CameraController.Instance.Scroll(Vector2.up * scroll * Time.deltaTime);
+        _scrollable.Scroll(Vector2.up * scroll * Time.deltaTime);
     }
 
     public void OnScroll(InputAction.CallbackContext context) {
@@ -100,11 +95,8 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     }
 
     public void OnBrake(InputAction.CallbackContext context) {
-        
         _shipController.IsBraking = true;
         _shipController.Direction = Vector3.zero;
-        
-        //_shipController.SetInertiaMultiplier(inertiaMultiplier);
     }
 
     public void OnEnable() {
