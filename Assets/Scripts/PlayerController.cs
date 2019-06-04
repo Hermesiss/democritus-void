@@ -34,12 +34,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         _t = transform;
         _controls = new GameControls();
         _controls.Ship.SetCallbacks(this);
-        _shipController = new ShipController(rotationSpeed,
-            acceleration,
-            motionDamping,
-            _t,
-            maximumSpeed,
-            inertiaMultiplier);
+        _shipController = new ShipController(new ShipParameters(2, 1, 1,1,1), _t );
         Instance = this;
     }
 
@@ -87,7 +82,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     public void OnZoom(InputAction.CallbackContext context) {
         var scroll = context.ReadValue<float>();
         Debug.Log($"Zoom: {scroll}");
-        _scrollable.Scroll(Vector2.up * scroll * Time.deltaTime);
+        _scrollable.Scroll(scroll * Time.deltaTime * Vector2.up);
     }
 
     public void OnScroll(InputAction.CallbackContext context) {

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Inventory;
 using UnityEngine;
 
-public class ShipParameters {
+public struct ShipParameters {
     public readonly int Weapons;
     public readonly int RearEngines;
     public readonly int SideEngines;
@@ -19,34 +18,47 @@ public class ShipParameters {
     }
 }
 
+public struct ShipAttributes {
+    public readonly float RotationSpeed;
+    public readonly float MovementSpeed;
+    public readonly float MovementDamping;
+    public readonly float MaximumSpeed;
+    public readonly float BrakingForce;
+    public float SmoothingAngle => RotationSpeed / 8;
+    public ShipAttributes(float rotationSpeed, float movementSpeed, float movementDamping, float maximumSpeed, float brakingForce) {
+        RotationSpeed = rotationSpeed;
+        MovementSpeed = movementSpeed;
+        MovementDamping = movementDamping;
+        MaximumSpeed = maximumSpeed;
+        BrakingForce = brakingForce;
+    }
+}
+
 [Serializable]
 public class ShipController {
-    public float RotationSpeed { get; private set; }
-    public float MovementSpeed { get; private set; }
-    public float MovementDamping { get; private set; }
-    public float MaximumSpeed { get; private set; }
-    public float BrakingForce { get; private set; }
-    [Header("asd")] public bool IsBraking;
+    
+    public ShipAttributes Attributes { get; private set; }
+    public bool IsBraking;
     public Vector3 Direction;
     public Vector2 Velocity { get; private set; }
 
     private Transform _t;
 
     public readonly ShipParameters Parameters;
+    public readonly IItemCollection<ShipWeapon> Weapons;
+    public readonly IItemCollection<ShipEngine> RearEngines;
+    public readonly IItemCollection<ShipEngine> SideEngines;
+    public readonly IItemCollection<ShipShield> Shields;
+    public readonly IItemCollection<ShipGenerator> Generators;
 
-    public readonly IItemCollection<ShipWeapon> Weapons = new ItemCollection<ShipWeapon>(10);
-    public readonly ShipEngine[] RearEngines;
-    public readonly ShipEngine[] SideEngines;
-    public readonly ShipShield[] Shields;
-    public readonly ShipGenerator[] Generators;
-
-    public ShipController(ShipParameters parameters) {
+    public ShipController(ShipParameters parameters, Transform t) {
         Parameters = parameters;
-        SetArrays(parameters);
-    }
-
-    private void SetArrays(ShipParameters parameters) {
-        ResizeItemsArray(parameters.Weapons, Weapons);
+        _t = t;
+        Weapons = new ItemCollection<ShipWeapon>(5, parameters.Weapons);
+        RearEngines = new ItemCollection<ShipEngine>(3, parameters.RearEngines);
+        SideEngines = new ItemCollection<ShipEngine>(3, parameters.SideEngines);
+        Shields = new ItemCollection<ShipShield>(3, parameters.Shields);
+        Generators = new ItemCollection<ShipGenerator>(3, parameters.Generators);
     }
 
     private void ResizeItemsArray<T>(int newSize, IItemCollection<T> items)
@@ -60,49 +72,35 @@ public class ShipController {
         throw new NotImplementedException();
     }
 
-    private float SmoothingAngle => RotationSpeed / 8;
-
-    public ShipController(float rotationSpeed,
-        float movementSpeed,
-        float movementDamping,
-        Transform t,
-        float maximumSpeed,
-        float brakingForce) {
-        RotationSpeed = rotationSpeed;
-        MovementSpeed = movementSpeed;
-        MovementDamping = movementDamping;
-        _t = t;
-        MaximumSpeed = maximumSpeed;
-        BrakingForce = brakingForce;
-    }
-
     public void RotateAt(Vector3 target) {
-        Vector2 projection = target - _t.position;
+        var position = _t.position;
+        var forward = _t.forward;
+        Vector2 projection = target - position;
+        
+        var angle = Vector3.SignedAngle(_t.up, projection, forward);
 
-        var angle = Vector3.SignedAngle(_t.up, projection, _t.forward);
+        angle = Mathf.Abs(angle) > Attributes.SmoothingAngle ? Mathf.Sign(angle) : angle / Attributes.SmoothingAngle;
 
-        angle = Mathf.Abs(angle) > SmoothingAngle ? Mathf.Sign(angle) : angle / SmoothingAngle;
-
-        _t.Rotate(_t.forward, angle * Time.deltaTime * RotationSpeed);
-        Debug.DrawRay(_t.position, _t.forward);
+        _t.Rotate(forward, angle * Time.deltaTime * Attributes.RotationSpeed);
+        Debug.DrawRay(position, _t.forward);
     }
 
     public void MoveToDirection() {
         float momentum;
         if (Direction.sqrMagnitude > float.Epsilon) {
-            momentum = MovementSpeed * (1 - MovementDamping) * 1;
+            momentum = Attributes.MovementSpeed * (1 - Attributes.MovementDamping) * 1;
         }
         else {
-            var inertia = IsBraking ? BrakingForce : 1;
+            var inertia = IsBraking ? Attributes.BrakingForce : 1;
             Direction = -Velocity;
-            momentum = Mathf.Clamp(MovementSpeed * MovementDamping * inertia, 0,
-                MovementDamping * Velocity.magnitude / Time.deltaTime);
+            momentum = Mathf.Clamp(Attributes.MovementSpeed * Attributes.MovementDamping * inertia, 0,
+                Attributes.MovementDamping * Velocity.magnitude / Time.deltaTime);
         }
 
-        Velocity += (Vector2) Direction.normalized * momentum * Time.deltaTime;
+        Velocity += momentum * Time.deltaTime * (Vector2) Direction.normalized;
 
-        if (Velocity.sqrMagnitude > MaximumSpeed * MaximumSpeed) {
-            Velocity = Velocity.normalized * MaximumSpeed;
+        if (Velocity.sqrMagnitude > Attributes.MaximumSpeed * Attributes.MaximumSpeed) {
+            Velocity = Velocity.normalized * Attributes.MaximumSpeed;
         }
 
         _t.Translate(Velocity * Time.deltaTime, Space.World);

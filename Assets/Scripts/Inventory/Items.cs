@@ -2,10 +2,23 @@
 using System.Collections.Generic;
 
 namespace Inventory {
-    public abstract class ItemBase <T> where T: Enum{
-        public float Weight { get; private set; }
-        public float Price { get; private set; }
+    public abstract class ItemBase <T> where T: Enum {
+        public readonly float Weight;
+        public readonly float Price;
         public abstract T ItemType { get; }
+        protected ItemBase(ItemParams itemParams) {
+            Weight = itemParams.Weight;
+            Price = itemParams.Price;
+        }
+    }
+    
+    public struct ItemParams {
+        public readonly float Weight;
+        public readonly float Price;
+        public ItemParams(float weight, float price) {
+            Weight = weight;
+            Price = price;
+        }
     }
 
     public interface IItemCollection<out T> : IEnumerable<T> {

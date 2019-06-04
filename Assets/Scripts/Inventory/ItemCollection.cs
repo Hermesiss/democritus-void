@@ -68,8 +68,9 @@ namespace Inventory {
             return extra;
         }
 
-        public ItemCollection(int size) {
-            objects = new T[size];
+        public ItemCollection(int maxSize, int currentCount) {
+            objects = new T[maxSize];
+            Count = currentCount;
         }
     }
 }
