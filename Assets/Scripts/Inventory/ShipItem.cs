@@ -2,7 +2,9 @@ namespace Inventory {
     public enum ShipItemType {
         None,
         Engine,
-        Weapon
+        Weapon,
+        Shield,
+        Generator
     }
 
     public abstract class ShipItem : ItemBase<ShipItemType> { }
@@ -29,5 +31,13 @@ namespace Inventory {
 
         public override ShipItemType ItemType => ShipItemType.Engine;
         public Variant EngineVariant;
+    }
+
+    public class ShipShield : ShipItem {
+        public override ShipItemType ItemType => ShipItemType.Shield;
+    }
+
+    public class ShipGenerator : ShipItem {
+        public override ShipItemType ItemType => ShipItemType.Generator;
     }
 }
