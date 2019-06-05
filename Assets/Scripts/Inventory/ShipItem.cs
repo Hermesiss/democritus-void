@@ -1,7 +1,8 @@
 namespace Inventory {
     public enum ShipItemType {
         None,
-        Engine,
+        RearEngine,
+        SideEngine,
         Weapon,
         Shield,
         Generator
@@ -16,6 +17,8 @@ namespace Inventory {
 
         public readonly Mode ConsumptionMode;
         public readonly float ConsumptionValue;
+
+        public override string ToString() => $"{ConsumptionMode.ToString()}: {ConsumptionValue}";
         public EnergyConsumption(Mode consumptionMode = Mode.None, float consumptionValue = 0) {
             ConsumptionMode = consumptionMode;
             ConsumptionValue = consumptionValue;
@@ -47,6 +50,8 @@ namespace Inventory {
     }
 
     public abstract class ShipItem : ItemBase<ShipItemType> {
+
+        public override string ToString() => $"{RotationSpeed}, {MovementSpeed}, {MovementDamping}, {MaximumSpeed}, {BrakingForce}, {EnergyConsumption}";
 
         public readonly float RotationSpeed;
         public readonly float MovementSpeed;
@@ -95,19 +100,18 @@ namespace Inventory {
         public override ShipItemType ItemType => ShipItemType.Weapon;
     }
 
-    public class ShipEngine : ShipItem {
-        
-        public enum Variant {
-            None,
-            Rear,
-            Side
+    public class ShipRearEngine : ShipItem {
+        public ShipRearEngine(ItemParams itemParams, ShipItemParams shipItemParams) : base(itemParams, shipItemParams) {
+            
         }
-
-        public ShipEngine(ItemParams itemParams, ShipItemParams shipItemParams, Variant engineVariant) : base(itemParams, shipItemParams) {
-            EngineVariant = engineVariant;
+        public override ShipItemType ItemType => ShipItemType.RearEngine;
+    }
+    
+    public class ShipSideEngine : ShipItem {
+        public ShipSideEngine(ItemParams itemParams, ShipItemParams shipItemParams) : base(itemParams, shipItemParams) {
+            
         }
-        public override ShipItemType ItemType => ShipItemType.Engine;
-        public readonly Variant EngineVariant;
+        public override ShipItemType ItemType => ShipItemType.SideEngine;
     }
 
     public class ShipShield : ShipItem {

@@ -4,19 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Inventory {
-    public class ItemCollection<T> : IItemCollection<T> {
+    public class ItemCollection<T> : IItemCollection<T> where T : class {
         #region Implementation of IEnumerable
 
         /// <inheritdoc />
-        public IEnumerator<T> GetEnumerator()
-        {
-            yield return (T) objects.GetEnumerator();
+        public IEnumerator<T> GetEnumerator() {
+            foreach (var o in objects) 
+            {
+                if (!Equals(o, null)) {
+                    yield return o;
+                }
+            }
         }
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return objects.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() {
+            return objects.Where(x => x != null).GetEnumerator();
         }
 
         #endregion

@@ -1,4 +1,4 @@
-using System;
+using Inventory;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Experimental.Input;
@@ -17,10 +17,10 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     [Range(0, 360)] [Tooltip("Angles per second")] [SerializeField]
     private float rotationSpeed;
 
-    [Range(0, 10)] [SerializeField] private float acceleration;
-    [Range(0, 1)] [SerializeField] private float motionDamping;
+    [Range(0, 10)] [SerializeField] private float movementSpeed;
+    [Range(0, 1)] [SerializeField] private float movementDamping;
     [Range(0, 50)] [SerializeField] private float maximumSpeed;
-    [Range(0, 1000)] [SerializeField] private float inertiaMultiplier;
+    [Range(0, 1000)] [SerializeField] private float brakingForce;
 
     private Transform _t;
     [SerializeField] private ShipController _shipController;
@@ -35,7 +35,44 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         _controls = new GameControls();
         _controls.Ship.SetCallbacks(this);
         _shipController = new ShipController(new ShipParameters(2, 1, 1,1,1), _t );
+        FillShip(_shipController);
+        SetAttributes();
         Instance = this;
+    }
+
+    private void SetAttributes() {
+        var attr = _shipController.Attributes;
+        movementSpeed = attr.MovementSpeed;
+        rotationSpeed = attr.RotationSpeed;
+        movementDamping = attr.MovementDamping;
+        maximumSpeed = attr.MaximumSpeed;
+        brakingForce = attr.BrakingForce;
+    }
+
+    private static void FillShip(ShipController shipController) {
+        var itemParams = new ItemParams(1,1);
+        var shipItemParams = new ShipItemParams();
+        shipController.PlaceItem(ShipItemType.Weapon, new ShipWeapon(
+            itemParams,
+            shipItemParams,
+            90,500,60,30, ShipWeapon.Variant.Kinetic), 0);
+        shipController.PlaceItem(ShipItemType.Weapon, new ShipWeapon(
+            itemParams,
+            shipItemParams,
+            90,500,60,30, ShipWeapon.Variant.Kinetic), 1);
+        shipController.PlaceItem(ShipItemType.RearEngine, new ShipRearEngine(
+            itemParams,
+            new ShipItemParams(movementSpeed:4, movementDamping:0.09f, maximumSpeed:12, brakingForce:50)), 0);
+        shipController.PlaceItem(ShipItemType.SideEngine, new ShipSideEngine(
+            itemParams,
+            new ShipItemParams(rotationSpeed: 180)), 0);
+        shipController.PlaceItem(ShipItemType.Shield, new ShipShield(
+            itemParams,
+            shipItemParams, 300, 30), 0);
+        shipController.PlaceItem(ShipItemType.Generator, new ShipGenerator(
+            itemParams,
+            shipItemParams,
+            30, 300), 0);
     }
 
     private void Start() {

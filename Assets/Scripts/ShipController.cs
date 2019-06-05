@@ -1,38 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Inventory;
 using UnityEngine;
-
-public struct ShipParameters {
-    public readonly int Weapons;
-    public readonly int RearEngines;
-    public readonly int SideEngines;
-    public readonly int Shields;
-    public readonly int Generators;
-
-    public ShipParameters(int weapons, int rearEngines, int sideEngines, int shields, int generators) {
-        Weapons = weapons;
-        RearEngines = rearEngines;
-        SideEngines = sideEngines;
-        Shields = shields;
-        Generators = generators;
-    }
-}
-
-public struct ShipAttributes {
-    public readonly float RotationSpeed;
-    public readonly float MovementSpeed;
-    public readonly float MovementDamping;
-    public readonly float MaximumSpeed;
-    public readonly float BrakingForce;
-    public float SmoothingAngle => RotationSpeed / 8;
-    public ShipAttributes(float rotationSpeed, float movementSpeed, float movementDamping, float maximumSpeed, float brakingForce) {
-        RotationSpeed = rotationSpeed;
-        MovementSpeed = movementSpeed;
-        MovementDamping = movementDamping;
-        MaximumSpeed = maximumSpeed;
-        BrakingForce = brakingForce;
-    }
-}
 
 [Serializable]
 public class ShipController {
@@ -46,19 +16,50 @@ public class ShipController {
 
     public readonly ShipParameters Parameters;
     public readonly IItemCollection<ShipWeapon> Weapons;
-    public readonly IItemCollection<ShipEngine> RearEngines;
-    public readonly IItemCollection<ShipEngine> SideEngines;
+    public readonly IItemCollection<ShipRearEngine> RearEngines;
+    public readonly IItemCollection<ShipSideEngine> SideEngines;
     public readonly IItemCollection<ShipShield> Shields;
     public readonly IItemCollection<ShipGenerator> Generators;
+    public readonly Dictionary<ShipItemType, IItemCollection<ShipItem>> Items;
+    
 
     public ShipController(ShipParameters parameters, Transform t) {
         Parameters = parameters;
         _t = t;
         Weapons = new ItemCollection<ShipWeapon>(5, parameters.Weapons);
-        RearEngines = new ItemCollection<ShipEngine>(3, parameters.RearEngines);
-        SideEngines = new ItemCollection<ShipEngine>(3, parameters.SideEngines);
+        RearEngines = new ItemCollection<ShipRearEngine>(3, parameters.RearEngines);
+        SideEngines = new ItemCollection<ShipSideEngine>(3, parameters.SideEngines);
         Shields = new ItemCollection<ShipShield>(3, parameters.Shields);
         Generators = new ItemCollection<ShipGenerator>(3, parameters.Generators);
+
+        Items = new Dictionary<ShipItemType, IItemCollection<ShipItem>> {
+            {ShipItemType.Weapon, Weapons},
+            {ShipItemType.RearEngine, RearEngines},
+            {ShipItemType.SideEngine, SideEngines},
+            {ShipItemType.Shield, Shields},
+            {ShipItemType.Generator, Generators}
+        };
+    }
+
+    private void RecalculateAttributes() {
+        var rotationSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.RotationSpeed));
+        var movementSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.MovementSpeed));
+        var movementDamping = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.MovementDamping));
+        var brakingForce = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.BrakingForce));
+        var maximumSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.MaximumSpeed));
+        Attributes = new ShipAttributes(rotationSpeed, movementSpeed, movementDamping, maximumSpeed, brakingForce);
+    }
+
+    public ShipItem PlaceItem<T>(ShipItemType itemType, T item, int index) where T: ShipItem {
+        var oldItem = Items[itemType].Add(item, index);
+        RecalculateAttributes();
+        return oldItem;
+    }
+
+    public ShipItem RemoveItem(ShipItemType itemType, int index) {
+        var removedItem = Items[itemType].Remove(index);
+        RecalculateAttributes();
+        return removedItem;
     }
 
     private void ResizeItemsArray<T>(int newSize, IItemCollection<T> items)

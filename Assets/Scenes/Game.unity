@@ -3432,7 +3432,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -4846,7 +4846,12 @@ PrefabInstance:
     - target: {fileID: 3287299846670980828, guid: c071eb07cda0ba64a8797520ca2c1e30,
         type: 3}
       propertyPath: rotationSpeed
-      value: 180
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3287299846670980828, guid: c071eb07cda0ba64a8797520ca2c1e30,
+        type: 3}
+      propertyPath: maximumSpeed
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3030705358369405149, guid: c071eb07cda0ba64a8797520ca2c1e30,
         type: 3}
