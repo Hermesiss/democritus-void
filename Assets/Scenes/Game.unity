@@ -4853,6 +4853,18 @@ PrefabInstance:
       propertyPath: maximumSpeed
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3287299846670980828, guid: c071eb07cda0ba64a8797520ca2c1e30,
+        type: 3}
+      propertyPath: shipRearEngine
+      value: 
+      objectReference: {fileID: 11400000, guid: 7d2086b7ee4c9a84ab7366584a2806f5,
+        type: 2}
+    - target: {fileID: 3287299846670980828, guid: c071eb07cda0ba64a8797520ca2c1e30,
+        type: 3}
+      propertyPath: shipSideEngine
+      value: 
+      objectReference: {fileID: 11400000, guid: 2ebcd370cc4d14c4aa3546d0182a3e8d,
+        type: 2}
     - target: {fileID: 3030705358369405149, guid: c071eb07cda0ba64a8797520ca2c1e30,
         type: 3}
       propertyPath: m_SizeDelta.x

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Inventory {
+    [Serializable]
     public class ItemCollection<T> : IItemCollection<T> where T : class {
         #region Implementation of IEnumerable
 

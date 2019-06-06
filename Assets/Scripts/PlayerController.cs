@@ -22,6 +22,9 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     [Range(0, 50)] [SerializeField] private float maximumSpeed;
     [Range(0, 1000)] [SerializeField] private float brakingForce;
 
+    [SerializeField] private ShipRearEngine shipRearEngine;
+    [SerializeField] private ShipSideEngine shipSideEngine;
+
     private Transform _t;
     [SerializeField] private ShipController _shipController;
     private GameControls _controls;
@@ -49,7 +52,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         brakingForce = attr.BrakingForce;
     }
 
-    private static void FillShip(ShipController shipController) {
+    private void FillShip(ShipController shipController) {
         var itemParams = new ItemParams(1,1);
         var shipItemParams = new ShipItemParams();
         shipController.PlaceItem(ShipItemType.Weapon, new ShipWeapon(
@@ -60,12 +63,8 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
             itemParams,
             shipItemParams,
             90,500,60,30, ShipWeapon.Variant.Kinetic), 1);
-        shipController.PlaceItem(ShipItemType.RearEngine, new ShipRearEngine(
-            itemParams,
-            new ShipItemParams(movementSpeed:4, movementDamping:0.09f, maximumSpeed:12, brakingForce:50)), 0);
-        shipController.PlaceItem(ShipItemType.SideEngine, new ShipSideEngine(
-            itemParams,
-            new ShipItemParams(rotationSpeed: 180)), 0);
+        shipController.PlaceItem(ShipItemType.RearEngine, shipRearEngine, 0);
+        shipController.PlaceItem(ShipItemType.SideEngine, shipSideEngine, 0);
         shipController.PlaceItem(ShipItemType.Shield, new ShipShield(
             itemParams,
             shipItemParams, 300, 30), 0);

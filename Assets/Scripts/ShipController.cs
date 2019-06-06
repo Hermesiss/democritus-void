@@ -14,12 +14,12 @@ public class ShipController {
 
     private Transform _t;
 
-    public readonly ShipParameters Parameters;
-    public readonly IItemCollection<ShipWeapon> Weapons;
-    public readonly IItemCollection<ShipRearEngine> RearEngines;
-    public readonly IItemCollection<ShipSideEngine> SideEngines;
-    public readonly IItemCollection<ShipShield> Shields;
-    public readonly IItemCollection<ShipGenerator> Generators;
+    public ShipParameters Parameters;
+    public IItemCollection<ShipWeapon> Weapons;
+    public IItemCollection<ShipRearEngine> RearEngines;
+    public IItemCollection<ShipSideEngine> SideEngines;
+    public IItemCollection<ShipShield> Shields;
+    public IItemCollection<ShipGenerator> Generators;
     public readonly Dictionary<ShipItemType, IItemCollection<ShipItem>> Items;
     
 
@@ -42,11 +42,11 @@ public class ShipController {
     }
 
     private void RecalculateAttributes() {
-        var rotationSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.RotationSpeed));
-        var movementSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.MovementSpeed));
-        var movementDamping = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.MovementDamping));
-        var brakingForce = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.BrakingForce));
-        var maximumSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.MaximumSpeed));
+        var rotationSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.shipItemParams.rotationSpeed));
+        var movementSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.shipItemParams.movementSpeed));
+        var movementDamping = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.shipItemParams.movementDamping));
+        var brakingForce = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.shipItemParams.brakingForce));
+        var maximumSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.shipItemParams.maximumSpeed));
         Attributes = new ShipAttributes(rotationSpeed, movementSpeed, movementDamping, maximumSpeed, brakingForce);
     }
 

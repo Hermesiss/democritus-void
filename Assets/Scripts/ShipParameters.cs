@@ -1,9 +1,12 @@
+using System;
+
+[Serializable]
 public struct ShipParameters {
-    public readonly int Weapons;
-    public readonly int RearEngines;
-    public readonly int SideEngines;
-    public readonly int Shields;
-    public readonly int Generators;
+    public int Weapons;
+    public int RearEngines;
+    public int SideEngines;
+    public int Shields;
+    public int Generators;
 
     public ShipParameters(int weapons, int rearEngines, int sideEngines, int shields, int generators) {
         Weapons = weapons;

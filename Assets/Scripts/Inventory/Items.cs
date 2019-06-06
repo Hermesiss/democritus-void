@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Inventory {
-    public abstract class ItemBase <T> where T: Enum {
-        public readonly float Weight;
-        public readonly float Price;
+    public abstract class ItemBase <T> : ScriptableObject where T: Enum {
+        public ItemParams ItemParams;
+        
         public abstract T ItemType { get; }
         protected ItemBase(ItemParams itemParams) {
-            Weight = itemParams.Weight;
-            Price = itemParams.Price;
+            ItemParams = itemParams;
         }
     }
-    
+    [Serializable]
     public struct ItemParams {
-        public readonly float Weight;
-        public readonly float Price;
+        public float weight;
+        public float price;
         public ItemParams(float weight, float price) {
-            Weight = weight;
-            Price = price;
+            this.weight = weight;
+            this.price = price;
         }
     }
 
+    
     public interface IItemCollection<out T> : IEnumerable<T> {
         T this[int index] { get; }
         
