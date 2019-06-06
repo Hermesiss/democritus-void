@@ -19,8 +19,8 @@ namespace Inventory {
             PerUsage
         }
 
-        public readonly Mode ConsumptionMode;
-        public readonly float ConsumptionValue;
+        public Mode ConsumptionMode;
+        public float ConsumptionValue;
 
         public override string ToString() => $"{ConsumptionMode.ToString()}: {ConsumptionValue}";
         public EnergyConsumption(Mode consumptionMode = Mode.None, float consumptionValue = 0) {
@@ -28,23 +28,23 @@ namespace Inventory {
             ConsumptionValue = consumptionValue;
         }
     }
-    
+
     [Serializable]
     public struct ShipItemParams {
-        public  float rotationSpeed;
-        public  float movementSpeed;
-        public  float movementDamping;
-        public  float maximumSpeed;
-        public  float brakingForce;
-        public  EnergyConsumption energyConsumption;
-        
+        public float rotationSpeed;
+        public float movementSpeed;
+        public float movementDamping;
+        public float maximumSpeed;
+        public float brakingForce;
+        public EnergyConsumption energyConsumption;
+
         public ShipItemParams(float rotationSpeed = 0,
             float movementSpeed = 0,
             float movementDamping = 0,
             float maximumSpeed = 0,
             float brakingForce = 0,
             EnergyConsumption energyConsumption = default
-            ) {
+        ) {
             this.rotationSpeed = rotationSpeed;
             this.movementSpeed = movementSpeed;
             this.movementDamping = movementDamping;

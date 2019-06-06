@@ -10,17 +10,25 @@ namespace Inventory {
 
         /// <inheritdoc />
         public IEnumerator<T> GetEnumerator() {
-            foreach (var o in objects) 
-            {
-                if (!Equals(o, null)) {
-                    yield return o;
-                }
-            }
+            return objects.Take(Count).GetEnumerator();
         }
 
         /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() {
-            return objects.Where(x => x != null).GetEnumerator();
+            return objects.Take(Count).GetEnumerator();
+        }
+
+        public override string ToString() {
+            var s = "";
+            foreach (var o in objects.Take(Count)) {
+                if (o == null)
+                    s += "null";
+                else
+                    s += o.ToString();
+                s += " ";
+            }
+            
+            return s;
         }
 
         #endregion
@@ -28,11 +36,15 @@ namespace Inventory {
         public T this[int index] => objects[index];
         
         public int Count { get; private set; }
+        public IItemCollection<T1> ToParent<T1>() {
+            return this as IItemCollection<T1>;
+        }
 
         private readonly T[] objects;
 
+        /// <inheritdoc />
         public T Add(object item, int? index = null) {
-            var it = (T) item;
+            var itemCasted = (T) item;
             var j = 0;
             if (index == null) {
                 var arr = objects.Take(Count).ToArray();
@@ -48,17 +60,19 @@ namespace Inventory {
             }
 
             var copy = objects[j];
-            objects[j] = it;
+            objects[j] = itemCasted;
 
             return copy;
         }
 
+        /// <inheritdoc />
         public T Remove(int index) {
             var copy = objects[index];
             objects[index] = default;
             return copy;
         }
 
+        /// <inheritdoc />
         public T[] Resize(int newSize) {
             if (newSize > objects.Length) throw new IndexOutOfRangeException("Index is more than array size");
             var delta = newSize - Count;
@@ -72,6 +86,7 @@ namespace Inventory {
             return extra;
         }
 
+        /// <inheritdoc />
         public ItemCollection(int maxSize, int currentCount) {
             objects = new T[maxSize];
             Count = currentCount;
