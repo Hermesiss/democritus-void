@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Inventory {
+    //TODO make CustomPropertyDrawer
     [Serializable]
     public struct ItemParams {
         public float weight;
         public float price;
         public Sprite gameImage;
         public Sprite inventoryImage;
+        
+        public override string ToString() => 
+            $"{weight}, " +
+            $"{price}, " +
+            $"{gameImage}, " +
+            $"{inventoryImage}";
         public ItemParams(float weight, float price, Sprite gameImage, Sprite inventoryImage) {
             this.weight = weight;
             this.price = price;
@@ -46,7 +53,5 @@ namespace Inventory {
         /// Size of usable part
         /// </summary>
         int Count { get; }
-
-        IItemCollection<T1> ToParent<T1>();
     }
 }

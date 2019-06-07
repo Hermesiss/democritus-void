@@ -1,4 +1,3 @@
-using Inventory;
 using Inventory.ShipItems;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,9 +14,8 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
 
     public static readonly Vector2Event OnPositionChange = new Vector2Event();
 
-    [Range(0, 360)] [Tooltip("Angles per second")] [SerializeField]
-    private float rotationSpeed;
-
+    // TODO make readonly fields with CustomEditor
+    [Range(0, 360)] [SerializeField] private float rotationSpeed;
     [Range(0, 10)] [SerializeField] private float movementSpeed;
     [Range(0, 1)] [SerializeField] private float movementDamping;
     [Range(0, 50)] [SerializeField] private float maximumSpeed;

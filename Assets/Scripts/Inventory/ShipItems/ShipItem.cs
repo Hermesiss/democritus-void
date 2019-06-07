@@ -4,7 +4,7 @@ namespace Inventory.ShipItems {
     
     public abstract class ShipItem : ItemBase<ShipItemType> {
 
-        public override string ToString() => $"{shipItemParams.rotationSpeed}, {shipItemParams.movementSpeed}, {shipItemParams.movementDamping}, {shipItemParams.maximumSpeed}, {shipItemParams.brakingForce}, {shipItemParams.energyConsumption}";
+        public override string ToString() => $"{ItemParams.ToString()}, {shipItemParams.ToString()}";
 
         public ShipItemParams shipItemParams;
 
@@ -22,6 +22,8 @@ namespace Inventory.ShipItems {
         Shield,
         Generator
     }
+    
+    //TODO make CustomPropertyDrawer
     [Serializable]
     public struct EnergyConsumption {
         [Serializable]
@@ -41,6 +43,7 @@ namespace Inventory.ShipItems {
         }
     }
 
+    //TODO make CustomPropertyDrawer
     [Serializable]
     public struct ShipItemParams {
         public float rotationSpeed;
@@ -50,6 +53,13 @@ namespace Inventory.ShipItems {
         public float brakingForce;
         public float armor;
         public EnergyConsumption energyConsumption;
+
+        public override string ToString() => $"{rotationSpeed}, " +
+            $"{movementSpeed}, " +
+            $"{movementDamping}, " +
+            $"{maximumSpeed}, " +
+            $"{brakingForce}, " +
+            $"{energyConsumption}";
 
         public ShipItemParams(float armor = 0,
             float rotationSpeed = 0,

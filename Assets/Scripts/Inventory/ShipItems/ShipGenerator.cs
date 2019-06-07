@@ -1,7 +1,6 @@
-using Inventory.ShipItems;
 using UnityEngine;
 
-namespace Inventory {
+namespace Inventory.ShipItems {
     [CreateAssetMenu(fileName = "New ShipGenerator", menuName = "Game/ShipGenerator", order = 51)]
     public class ShipGenerator : ShipItem {
         public float GenerationSpeed;

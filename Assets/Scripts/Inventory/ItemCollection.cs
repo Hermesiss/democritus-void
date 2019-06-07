@@ -33,12 +33,11 @@ namespace Inventory {
 
         #endregion
 
-        public T this[int index] => objects[index];
         
+        public T this[int index] => objects[index];
+
+        /// <inheritdoc />
         public int Count { get; private set; }
-        public IItemCollection<T1> ToParent<T1>() {
-            return this as IItemCollection<T1>;
-        }
 
         private readonly T[] objects;
 

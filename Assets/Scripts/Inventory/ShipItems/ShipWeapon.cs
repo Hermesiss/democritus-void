@@ -1,8 +1,7 @@
 using System;
-using Inventory.ShipItems;
 using UnityEngine;
 
-namespace Inventory {
+namespace Inventory.ShipItems {
     [CreateAssetMenu(fileName = "New ShipWeapon", menuName = "Game/ShipWeapon", order = 51)]
     public class ShipWeapon : ShipItem {
         [Serializable]

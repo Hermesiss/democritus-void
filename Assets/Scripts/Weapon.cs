@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
+//TODO integrate with Inventory.ShipItems.ShipWeapon
 [RequireComponent(typeof(LineRenderer))]
 [RequireComponent(typeof(AudioSource))]
 public class Weapon : MonoBehaviour {

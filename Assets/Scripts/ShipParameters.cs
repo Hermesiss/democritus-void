@@ -1,5 +1,6 @@
 using System;
 
+//TODO replace params with Dict<ShipItemType, int>
 [Serializable]
 public struct ShipParameters {
     public int Weapons;
@@ -23,7 +24,7 @@ public struct ShipAttributes {
     public readonly float MovementDamping;
     public readonly float MaximumSpeed;
     public readonly float BrakingForce;
-    public readonly float Armor;
+    public readonly float Armor; //TODO add usages
     public float SmoothingAngle => RotationSpeed / 8;
     public ShipAttributes(float rotationSpeed, float movementSpeed, float movementDamping, float maximumSpeed, float brakingForce, float armor) {
         RotationSpeed = rotationSpeed;

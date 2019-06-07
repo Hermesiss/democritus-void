@@ -1,10 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Parallax2D : MonoBehaviour {
 
     private Vector3 _startPosition;
+    
+    //TODO add tile changing mode
+    
+    //TODO add new mode - custom shift ignoring Z
+    
     private void Awake() {
         _startPosition = transform.position;
         PlayerController.OnPositionChange.AddListener(delta => {

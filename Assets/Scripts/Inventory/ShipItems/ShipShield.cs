@@ -1,7 +1,6 @@
-using Inventory.ShipItems;
 using UnityEngine;
 
-namespace Inventory {
+namespace Inventory.ShipItems {
     [CreateAssetMenu(fileName = "New ShipShield", menuName = "Game/ShipShield", order = 51)]
     public class ShipShield : ShipItem {
         public float DamageCapacity;
