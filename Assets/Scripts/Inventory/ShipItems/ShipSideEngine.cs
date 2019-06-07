@@ -1,3 +1,4 @@
+using Inventory.ShipItems;
 using UnityEngine;
 
 namespace Inventory {

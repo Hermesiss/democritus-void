@@ -4865,6 +4865,30 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 2ebcd370cc4d14c4aa3546d0182a3e8d,
         type: 2}
+    - target: {fileID: 3287299846670980828, guid: c071eb07cda0ba64a8797520ca2c1e30,
+        type: 3}
+      propertyPath: shipWeapon1
+      value: 
+      objectReference: {fileID: 11400000, guid: 2f786e2dfe939fe4ca6a77cd5928b5c5,
+        type: 2}
+    - target: {fileID: 3287299846670980828, guid: c071eb07cda0ba64a8797520ca2c1e30,
+        type: 3}
+      propertyPath: shipWeapon2
+      value: 
+      objectReference: {fileID: 11400000, guid: 2f786e2dfe939fe4ca6a77cd5928b5c5,
+        type: 2}
+    - target: {fileID: 3287299846670980828, guid: c071eb07cda0ba64a8797520ca2c1e30,
+        type: 3}
+      propertyPath: shipGenerator
+      value: 
+      objectReference: {fileID: 11400000, guid: ad083ba15b561eb40bbdb331ebd752fc,
+        type: 2}
+    - target: {fileID: 3287299846670980828, guid: c071eb07cda0ba64a8797520ca2c1e30,
+        type: 3}
+      propertyPath: shipShield
+      value: 
+      objectReference: {fileID: 11400000, guid: ada620ac8e03e714b8e767fb70fd4b91,
+        type: 2}
     - target: {fileID: 3030705358369405149, guid: c071eb07cda0ba64a8797520ca2c1e30,
         type: 3}
       propertyPath: m_SizeDelta.x

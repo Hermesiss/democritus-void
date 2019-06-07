@@ -3,21 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Inventory {
-    public abstract class ItemBase <T> : ScriptableObject where T: Enum {
-        public ItemParams ItemParams;
-        
-        public abstract T ItemType { get; }
-        protected ItemBase(ItemParams itemParams) {
-            ItemParams = itemParams;
-        }
-    }
     [Serializable]
     public struct ItemParams {
         public float weight;
         public float price;
-        public ItemParams(float weight, float price) {
+        public Sprite gameImage;
+        public Sprite inventoryImage;
+        public ItemParams(float weight, float price, Sprite gameImage, Sprite inventoryImage) {
             this.weight = weight;
             this.price = price;
+            this.gameImage = gameImage == null ? CommonResources.MissingSprite : gameImage;
+            this.inventoryImage = inventoryImage == null ? CommonResources.MissingSprite : inventoryImage;
         }
     }
     

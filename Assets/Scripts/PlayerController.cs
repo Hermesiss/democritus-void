@@ -1,4 +1,5 @@
 using Inventory;
+using Inventory.ShipItems;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Experimental.Input;
@@ -22,11 +23,15 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     [Range(0, 50)] [SerializeField] private float maximumSpeed;
     [Range(0, 1000)] [SerializeField] private float brakingForce;
 
+    [SerializeField] private ShipWeapon shipWeapon1;
+    [SerializeField] private ShipWeapon shipWeapon2;
     [SerializeField] private ShipRearEngine shipRearEngine;
     [SerializeField] private ShipSideEngine shipSideEngine;
+    [SerializeField] private ShipGenerator shipGenerator;
+    [SerializeField] private ShipShield shipShield;
 
     private Transform _t;
-    [SerializeField] private ShipController _shipController;
+    private ShipController _shipController;
     private GameControls _controls;
 
     private Weapon[] _weapons;
@@ -37,7 +42,7 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
         _t = transform;
         _controls = new GameControls();
         _controls.Ship.SetCallbacks(this);
-        _shipController = new ShipController(new ShipParameters(2, 1, 1,1,1), _t );
+        _shipController = new ShipController(new ShipParameters(2, 1, 1, 1, 1), _t);
         FillShip(_shipController);
         SetAttributes();
         Instance = this;
@@ -53,25 +58,12 @@ public class PlayerController : MonoBehaviour, GameControls.IShipActions {
     }
 
     private void FillShip(ShipController shipController) {
-        var itemParams = new ItemParams(1,1);
-        var shipItemParams = new ShipItemParams();
-        shipController.PlaceItem(ShipItemType.Weapon, new ShipWeapon(
-            itemParams,
-            shipItemParams,
-            90,500,60,30, ShipWeapon.Variant.Kinetic), 0);
-        shipController.PlaceItem(ShipItemType.Weapon, new ShipWeapon(
-            itemParams,
-            shipItemParams,
-            90,500,60,30, ShipWeapon.Variant.Kinetic), 1);
+        shipController.PlaceItem(ShipItemType.Weapon, shipWeapon1, 0);
+        shipController.PlaceItem(ShipItemType.Weapon, shipWeapon2, 1);
         shipController.PlaceItem(ShipItemType.RearEngine, shipRearEngine, 0);
         shipController.PlaceItem(ShipItemType.SideEngine, shipSideEngine, 0);
-        shipController.PlaceItem(ShipItemType.Shield, new ShipShield(
-            itemParams,
-            shipItemParams, 300, 30), 0);
-        shipController.PlaceItem(ShipItemType.Generator, new ShipGenerator(
-            itemParams,
-            shipItemParams,
-            30, 300), 0);
+        shipController.PlaceItem(ShipItemType.Shield, shipShield, 0);
+        shipController.PlaceItem(ShipItemType.Generator, shipGenerator, 0);
     }
 
     private void Start() {

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c07aba70fd9c4616b758315a3bc85f60, type: 3}
+  m_Name: GoodShipShield
+  m_EditorClassIdentifier: 
+  ItemParams:
+    weight: 0
+    price: 0
+    gameImage: {fileID: 0}
+    inventoryImage: {fileID: 0}
+  shipItemParams:
+    rotationSpeed: 0
+    movementSpeed: 0
+    movementDamping: 0
+    maximumSpeed: 0
+    brakingForce: 0
+    armor: 0
+    energyConsumption:
+      mode: 0
+      value: 0
+  DamageCapacity: 500
+  RecoverySpeed: 30

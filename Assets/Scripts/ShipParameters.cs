@@ -23,12 +23,14 @@ public struct ShipAttributes {
     public readonly float MovementDamping;
     public readonly float MaximumSpeed;
     public readonly float BrakingForce;
+    public readonly float Armor;
     public float SmoothingAngle => RotationSpeed / 8;
-    public ShipAttributes(float rotationSpeed, float movementSpeed, float movementDamping, float maximumSpeed, float brakingForce) {
+    public ShipAttributes(float rotationSpeed, float movementSpeed, float movementDamping, float maximumSpeed, float brakingForce, float armor) {
         RotationSpeed = rotationSpeed;
         MovementSpeed = movementSpeed;
         MovementDamping = movementDamping;
         MaximumSpeed = maximumSpeed;
         BrakingForce = brakingForce;
+        Armor = armor;
     }
 }

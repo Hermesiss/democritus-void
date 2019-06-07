@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Inventory;
+using Inventory.ShipItems;
 using UnityEngine;
 
 [Serializable]
 public class ShipController {
-    
+
     public ShipAttributes Attributes { get; private set; }
     public bool IsBraking;
     public Vector3 Direction;
@@ -21,7 +22,7 @@ public class ShipController {
     public IItemCollection<ShipShield> Shields;
     public IItemCollection<ShipGenerator> Generators;
     public readonly Dictionary<ShipItemType, IItemCollection<ShipItem>> Items;
-    
+
 
     public ShipController(ShipParameters parameters, Transform t) {
         Parameters = parameters;
@@ -47,10 +48,12 @@ public class ShipController {
         var movementDamping = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.shipItemParams.movementDamping));
         var brakingForce = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.shipItemParams.brakingForce));
         var maximumSpeed = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.shipItemParams.maximumSpeed));
-        Attributes = new ShipAttributes(rotationSpeed, movementSpeed, movementDamping, maximumSpeed, brakingForce);
+        var armor = Items.Sum(x => x.Value.Where(z => z != null).Sum(z => z.shipItemParams.armor));
+        Attributes = new ShipAttributes(rotationSpeed, movementSpeed, movementDamping, maximumSpeed, brakingForce,
+            armor);
     }
 
-    public ShipItem PlaceItem<T>(ShipItemType itemType, T item, int index) where T: ShipItem {
+    public ShipItem PlaceItem<T>(ShipItemType itemType, T item, int index) where T : ShipItem {
         var oldItem = Items[itemType].Add(item, index);
         RecalculateAttributes();
         return oldItem;
@@ -77,7 +80,7 @@ public class ShipController {
         var position = _t.position;
         var forward = _t.forward;
         Vector2 projection = target - position;
-        
+
         var angle = Vector3.SignedAngle(_t.up, projection, forward);
 
         angle = Mathf.Abs(angle) > Attributes.SmoothingAngle ? Mathf.Sign(angle) : angle / Attributes.SmoothingAngle;
